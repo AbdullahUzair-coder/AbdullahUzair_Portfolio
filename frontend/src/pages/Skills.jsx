@@ -187,7 +187,7 @@ const Skills = () => {
                             <div className="flex items-center gap-4 mb-4 relative z-10">
                               <div className={`w-12 h-12 rounded-xl ${config.bgColor} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                                 {skill.icon ? (
-                                  <img src={skill.icon} alt={skill.name} className="w-7 h-7 object-contain" />
+                                  <img src={skill.icon.startsWith('http') ? skill.icon : `${import.meta.env.VITE_API_URL}${skill.icon}`} alt={skill.name} className="w-7 h-7 object-contain" />
                                 ) : (
                                   <span className={`text-xl font-bold bg-gradient-to-r ${config.color} bg-clip-text text-transparent`}>
                                     {skill.name.charAt(0).toUpperCase()}

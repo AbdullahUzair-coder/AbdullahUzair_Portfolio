@@ -202,7 +202,7 @@ const Projects = () => {
               {/* Image */}
               <div className="h-48 bg-gradient-to-br from-dark-700 to-dark-800 relative overflow-hidden">
                 {project.image ? (
-                  <img src={project.image} alt={project.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <img src={project.image.startsWith('http') ? project.image : `${import.meta.env.VITE_API_URL}${project.image}`} alt={project.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center">
                     <span className="text-6xl font-bold text-dark-600 group-hover:text-dark-500 transition-colors">
@@ -370,7 +370,7 @@ const Projects = () => {
                   />
                   {formData.image && (
                     <div className="mt-3 rounded-xl overflow-hidden h-32">
-                      <img src={formData.image} alt="Preview" className="w-full h-full object-cover" />
+                      <img src={formData.image.startsWith('http') ? formData.image : `${import.meta.env.VITE_API_URL}${formData.image}`} alt="Preview" className="w-full h-full object-cover" />
                     </div>
                   )}
                 </div>

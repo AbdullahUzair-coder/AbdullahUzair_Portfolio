@@ -141,10 +141,10 @@ const About = () => {
                 <div className="relative w-64 h-64 mx-auto bg-gradient-to-br from-dark-700 to-dark-800 rounded-full border-4 border-dark-600 shadow-2xl overflow-hidden group-hover:scale-105 transition-transform duration-500">
                   {settings?.profileImage ? (
                     <img 
-                      src={`${import.meta.env.VITE_API_BASE_URL}${settings.profileImage}`} 
+                      src={`${import.meta.env.VITE_API_URL}${settings.profileImage}`} 
                       alt={settings?.name || 'Profile'} 
                       className="w-full h-full object-cover"
-                      onLoad={() => console.log('Image loaded successfully:', `${import.meta.env.VITE_API_BASE_URL}${settings.profileImage}`)}
+                      onLoad={() => console.log('Image loaded successfully:', `${import.meta.env.VITE_API_URL}${settings.profileImage}`)}
                       onError={(e) => console.error('Image failed to load:', e.target.src)}
                     />
                   ) : (
@@ -205,7 +205,7 @@ const About = () => {
               <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
                 {settings?.cvUrl && (
                   <motion.a 
-                    href={`${import.meta.env.VITE_API_BASE_URL}${settings.cvUrl}`}
+                    href={`${import.meta.env.VITE_API_URL}${settings.cvUrl}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-lg font-medium shadow-lg shadow-blue-500/25 flex items-center gap-2"

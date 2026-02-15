@@ -250,7 +250,7 @@ const Skills = () => {
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3">
                           {skill.icon ? (
-                            <img src={skill.icon} alt={skill.name} className="w-10 h-10 rounded-lg object-contain" />
+                            <img src={skill.icon.startsWith('http') ? skill.icon : `${import.meta.env.VITE_API_URL}${skill.icon}`} alt={skill.name} className="w-10 h-10 rounded-lg object-contain" />
                           ) : (
                             <div className={`w-10 h-10 bg-gradient-to-r ${color} rounded-lg flex items-center justify-center`}>
                               <span className="text-white font-bold">{skill.name[0]}</span>
@@ -396,7 +396,7 @@ const Skills = () => {
                   />
                   {formData.icon && (
                     <div className="mt-3 flex items-center gap-3 p-3 bg-dark-700/50 rounded-xl">
-                      <img src={formData.icon} alt="Icon Preview" className="w-10 h-10 rounded-lg object-contain" />
+                      <img src={formData.icon.startsWith('http') ? formData.icon : `${import.meta.env.VITE_API_URL}${formData.icon}`} alt="Icon Preview" className="w-10 h-10 rounded-lg object-contain" />
                       <span className="text-sm text-gray-400">Icon preview</span>
                     </div>
                   )}

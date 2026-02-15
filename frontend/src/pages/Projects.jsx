@@ -187,7 +187,7 @@ const Projects = () => {
                   <div className="relative h-52 overflow-hidden">
                     {project.image ? (
                       <motion.img 
-                        src={project.image} 
+                        src={project.image.startsWith('http') ? project.image : `${import.meta.env.VITE_API_URL}${project.image}`} 
                         alt={project.title} 
                         className="w-full h-full object-cover" 
                         whileHover={{ scale: 1.1 }} 
@@ -313,7 +313,7 @@ const Projects = () => {
               {/* Image */}
               <div className="relative h-64 md:h-80">
                 {selectedProject.image ? (
-                  <img src={selectedProject.image} alt={selectedProject.title} className="w-full h-full object-cover" />
+                  <img src={selectedProject.image.startsWith('http') ? selectedProject.image : `${import.meta.env.VITE_API_URL}${selectedProject.image}`} alt={selectedProject.title} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full bg-gradient-to-br from-purple-900/50 to-pink-900/50 flex items-center justify-center">
                     <FaCode className="text-8xl text-purple-500/30" />

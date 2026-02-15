@@ -79,7 +79,7 @@ const About = () => {
         }
         
         if (settings.profileImage) {
-          setProfileImagePreview(`${import.meta.env.VITE_API_BASE_URL}${settings.profileImage}`)
+          setProfileImagePreview(`${import.meta.env.VITE_API_URL}${settings.profileImage}`)
         }
         
         if (settings.cvUrl) {
@@ -608,7 +608,7 @@ const About = () => {
                       </div>
                     </div>
                     <a
-                      href={`${import.meta.env.VITE_API_BASE_URL}${currentCvUrl}`}
+                      href={`${import.meta.env.VITE_API_URL}${currentCvUrl}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-blue-400 hover:text-blue-300 text-sm font-medium"
