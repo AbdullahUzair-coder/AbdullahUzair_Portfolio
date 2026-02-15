@@ -11,7 +11,7 @@ const Footer = () => {
     },
     {
       icon: <FaLinkedin className="w-5 h-5" />,
-      href: 'https://linkedin.com/in/abdullah-uzair',
+      href: 'https://www.linkedin.com/in/abdullah-uzair-163a05374/',
       label: 'LinkedIn'
     },
     {
@@ -41,14 +41,6 @@ const Footer = () => {
                 </span>
               </a>
             ))}
-          </div>
-
-          {/* Copyright */}
-          <div className="text-center">
-            <p className="text-gray-400 flex items-center gap-2 justify-center">
-              © {currentYear} Abdullah Uzair. Made with{' '}
-              <FaHeart className="text-red-500 animate-pulse" /> using React
-            </p>
           </div>
 
           {/* Links */}

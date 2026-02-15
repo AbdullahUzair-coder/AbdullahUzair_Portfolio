@@ -121,12 +121,12 @@ const Contact = () => {
       href: settings?.socialLinks?.linkedin || "https://linkedin.com", 
       color: "hover:text-blue-400" 
     },
-    { 
-      icon: FaTwitter, 
-      label: "Twitter", 
-      href: settings?.socialLinks?.twitter || "https://twitter.com", 
-      color: "hover:text-cyan-400" 
-    },
+    // { 
+    //   icon: FaTwitter, 
+    //   label: "Twitter", 
+    //   href: settings?.socialLinks?.twitter || "https://twitter.com", 
+    //   color: "hover:text-cyan-400" 
+    // },
   ]
 
   return (
