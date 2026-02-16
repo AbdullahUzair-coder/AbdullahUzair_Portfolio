@@ -68,6 +68,7 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/admin/auth', require('./routes/adminAuthRoutes'));
 app.use('/api/projects', require('./routes/projectRoutes'));
 app.use('/api/skills', require('./routes/skillRoutes'));
+app.use('/api/certificates', require('./routes/certificateRoutes'));
 app.use('/api/contact', require('./routes/contactRoutes'));
 app.use('/api/messages', require('./routes/messageRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));

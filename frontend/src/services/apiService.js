@@ -90,6 +90,48 @@ export const skillsAPI = {
   },
 }
 
+// ==================== CERTIFICATES API ====================
+
+export const certificatesAPI = {
+  // Get all certificates (public)
+  getAll: async (params = {}) => {
+    const response = await api.get('/api/certificates', { params })
+    return response.data
+  },
+
+  // Get single certificate (public)
+  getById: async (id) => {
+    const response = await api.get(`/api/certificates/${id}`)
+    return response.data
+  },
+
+  // Create certificate (admin)
+  create: async (formData) => {
+    const response = await api.post('/api/certificates', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    return response.data
+  },
+
+  // Update certificate (admin)
+  update: async (id, formData) => {
+    const response = await api.put(`/api/certificates/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    })
+    return response.data
+  },
+
+  // Delete certificate (admin)
+  delete: async (id) => {
+    const response = await api.delete(`/api/certificates/${id}`)
+    return response.data
+  },
+}
+
 // ==================== MESSAGES API ====================
 
 export const messagesAPI = {
@@ -190,6 +232,7 @@ export default {
   auth: authAPI,
   projects: projectsAPI,
   skills: skillsAPI,
+  certificates: certificatesAPI,
   messages: messagesAPI,
   admin: adminAPI,
   settings: settingsAPI,

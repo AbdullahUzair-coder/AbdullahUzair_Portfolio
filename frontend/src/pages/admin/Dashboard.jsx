@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { FaProjectDiagram, FaStar, FaEnvelope, FaChartLine, FaUser, FaFileAlt, FaArrowRight, FaCog } from 'react-icons/fa'
-import { projectsAPI, skillsAPI, messagesAPI } from '../../services/apiService'
+import { FaProjectDiagram, FaStar, FaCertificate, FaEnvelope, FaChartLine, FaUser, FaFileAlt, FaArrowRight, FaCog } from 'react-icons/fa'
+import { projectsAPI, skillsAPI, certificatesAPI, messagesAPI } from '../../services/apiService'
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
     projects: 0,
     skills: 0,
+    certificates: 0,
     messages: 0,
   })
   const [loading, setLoading] = useState(true)
@@ -20,9 +21,10 @@ const Dashboard = () => {
   const fetchStats = async () => {
     try {
       setLoading(true)
-      const [projectsData, skillsData, messagesData] = await Promise.all([
+      const [projectsData, skillsData, certificatesData, messagesData] = await Promise.all([
         projectsAPI.getAll(),
         skillsAPI.getAll(),
+        certificatesAPI.getAll(),
         messagesAPI.getAll(),
       ])
 
@@ -32,6 +34,7 @@ const Dashboard = () => {
       setStats({
         projects: projectsData.data.results || projectsData.data.projects?.length || 0,
         skills: skillsData.data.results || skillsData.data.skills?.length || 0,
+        certificates: certificatesData.data.results || certificatesData.data.certificates?.length || 0,
         messages: messagesData.data.results || messages.length || 0,
       })
     } catch (error) {
@@ -57,15 +60,15 @@ const Dashboard = () => {
   const statCards = [
     { title: 'Total Projects', value: stats.projects, icon: FaProjectDiagram, color: 'from-blue-500 to-cyan-500', link: '/admin/projects' },
     { title: 'Total Skills', value: stats.skills, icon: FaStar, color: 'from-amber-500 to-orange-500', link: '/admin/skills' },
+    { title: 'Certificates', value: stats.certificates, icon: FaCertificate, color: 'from-indigo-500 to-purple-500', link: '/admin/certificates' },
     { title: 'Messages', value: stats.messages, icon: FaEnvelope, color: 'from-green-500 to-emerald-500', link: '/admin/messages' },
-    { title: 'Portfolio Views', value: '1.2K', icon: FaChartLine, color: 'from-purple-500 to-pink-500', link: null },
   ]
 
   const quickActions = [
     { title: 'Manage Projects', desc: 'Add, edit, or remove projects', icon: FaProjectDiagram, link: '/admin/projects', color: 'from-blue-500 to-cyan-500' },
     { title: 'Manage Skills', desc: 'Update your technical skills', icon: FaStar, link: '/admin/skills', color: 'from-amber-500 to-orange-500' },
+    { title: 'Manage Certificates', desc: 'Add your certifications', icon: FaCertificate, link: '/admin/certificates', color: 'from-indigo-500 to-purple-500' },
     { title: 'View Messages', desc: 'Check contact submissions', icon: FaEnvelope, link: '/admin/messages', color: 'from-green-500 to-emerald-500' },
-    { title: 'Edit About', desc: 'Update bio and CV', icon: FaUser, link: '/admin/about', color: 'from-purple-500 to-pink-500' },
   ]
 
   return (

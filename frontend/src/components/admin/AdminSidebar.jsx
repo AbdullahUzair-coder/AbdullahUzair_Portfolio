@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { FaTachometerAlt, FaProjectDiagram, FaStar, FaEnvelope, FaUser, FaSignOutAlt, FaHome } from 'react-icons/fa'
+import { FaTachometerAlt, FaProjectDiagram, FaStar, FaCertificate, FaEnvelope, FaUser, FaSignOutAlt, FaHome } from 'react-icons/fa'
 import { useAuth } from '../../context/AuthContext'
 
 const AdminSidebar = () => {
@@ -11,6 +11,7 @@ const AdminSidebar = () => {
     { path: '/admin/about', icon: FaUser, label: 'About' },
     { path: '/admin/projects', icon: FaProjectDiagram, label: 'Projects' },
     { path: '/admin/skills', icon: FaStar, label: 'Skills' },
+    { path: '/admin/certificates', icon: FaCertificate, label: 'Certificates' },
     { path: '/admin/messages', icon: FaEnvelope, label: 'Messages' },
   ]
 

@@ -11,6 +11,7 @@ import Home from './pages/Home'
 import About from './pages/About'
 import Projects from './pages/Projects'
 import Skills from './pages/Skills'
+import Certificates from './pages/Certificates'
 import Contact from './pages/Contact'
 
 // Admin Pages
@@ -18,6 +19,7 @@ import AdminLogin from './pages/admin/Login'
 import AdminDashboard from './pages/admin/Dashboard'
 import AdminProjects from './pages/admin/Projects'
 import AdminSkills from './pages/admin/Skills'
+import AdminCertificates from './pages/admin/Certificates'
 import AdminMessages from './pages/admin/Messages'
 import AdminProfile from './pages/admin/Profile'
 import AdminAbout from './pages/admin/About'
@@ -38,6 +40,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/projects" element={<Projects />} />
           <Route path="/skills" element={<Skills />} />
+          <Route path="/certificates" element={<Certificates />} />
           <Route path="/contact" element={<Contact />} />
         </Route>
 
@@ -57,6 +60,7 @@ function App() {
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="projects" element={<AdminProjects />} />
           <Route path="skills" element={<AdminSkills />} />
+          <Route path="certificates" element={<AdminCertificates />} />
           <Route path="messages" element={<AdminMessages />} />
           <Route path="profile" element={<AdminProfile />} />
           <Route path="about" element={<AdminAbout />} />

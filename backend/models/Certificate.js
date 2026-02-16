@@ -11,17 +11,38 @@ const certificateSchema = new mongoose.Schema({
     required: [true, 'Please provide the issuer name'],
     trim: true
   },
+  description: {
+    type: String,
+    trim: true
+  },
   date: {
     type: Date,
     required: [true, 'Please provide the issue date']
   },
+  credentialId: {
+    type: String,
+    trim: true
+  },
   link: {
     type: String,
-    trim: true,
-    match: [
-      /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/,
-      'Please provide a valid URL'
-    ]
+    trim: true
+  },
+  image: {
+    type: String,
+    trim: true
+  },
+  pdfUrl: {
+    type: String,
+    trim: true
+  },
+  category: {
+    type: String,
+    enum: ['coursera', 'udemy', 'linkedin', 'google', 'microsoft', 'aws', 'other'],
+    default: 'other'
+  },
+  isActive: {
+    type: Boolean,
+    default: true
   }
 }, {
   timestamps: true
