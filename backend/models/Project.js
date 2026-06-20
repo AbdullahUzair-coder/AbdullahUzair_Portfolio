@@ -31,6 +31,14 @@ const projectSchema = new mongoose.Schema({
       'Please provide a valid URL'
     ]
   },
+  videoUrl: {
+    type: String,
+    trim: true,
+    match: [
+      /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?(\?.*)?$/,
+      'Please provide a valid URL'
+    ]
+  },
   image: {
     type: String,
     default: 'default-project.png'

@@ -44,6 +44,11 @@ const createProjectValidation = [
     .trim()
     .isURL()
     .withMessage('Please provide a valid live demo URL'),
+  body('videoUrl')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isURL()
+    .withMessage('Please provide a valid video URL'),
   body('image')
     .optional()
     .trim()
@@ -87,6 +92,11 @@ const updateProjectValidation = [
     .trim()
     .isURL()
     .withMessage('Please provide a valid live demo URL'),
+  body('videoUrl')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isURL()
+    .withMessage('Please provide a valid video URL'),
   body('image')
     .optional()
     .trim()

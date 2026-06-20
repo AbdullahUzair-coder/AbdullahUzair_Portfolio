@@ -87,7 +87,7 @@ exports.getProject = async (req, res, next) => {
 // @access  Private/Admin
 exports.createProject = async (req, res, next) => {
   try {
-    const { title, description, techStack, githubLink, liveLink, image } = req.body;
+    const { title, description, techStack, githubLink, liveLink, videoUrl, image } = req.body;
 
     // Create project
     const project = await Project.create({
@@ -96,6 +96,7 @@ exports.createProject = async (req, res, next) => {
       techStack,
       githubLink,
       liveLink,
+      videoUrl,
       image
     });
 
@@ -131,7 +132,7 @@ exports.updateProject = async (req, res, next) => {
       });
     }
 
-    const { title, description, techStack, githubLink, liveLink, image } = req.body;
+    const { title, description, techStack, githubLink, liveLink, videoUrl, image } = req.body;
 
     // Check if project exists
     let project = await Project.findById(req.params.id);
@@ -150,6 +151,7 @@ exports.updateProject = async (req, res, next) => {
     if (techStack !== undefined) updateData.techStack = techStack;
     if (githubLink !== undefined) updateData.githubLink = githubLink;
     if (liveLink !== undefined) updateData.liveLink = liveLink;
+    if (videoUrl !== undefined) updateData.videoUrl = videoUrl;
     if (image !== undefined) updateData.image = image;
 
     // Update project

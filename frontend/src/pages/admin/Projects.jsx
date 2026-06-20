@@ -16,6 +16,7 @@ const Projects = () => {
     techStack: '',
     githubLink: '',
     liveLink: '',
+    videoUrl: '',
     image: '',
   })
 
@@ -70,6 +71,7 @@ const Projects = () => {
       techStack: project.techStack.join(', '),
       githubLink: project.githubLink || '',
       liveLink: project.liveLink || '',
+      videoUrl: project.videoUrl || '',
       image: project.image || '',
     })
     setShowModal(true)
@@ -98,6 +100,7 @@ const Projects = () => {
       techStack: '',
       githubLink: '',
       liveLink: '',
+      videoUrl: '',
       image: '',
     })
   }
@@ -356,6 +359,18 @@ const Projects = () => {
                       placeholder="https://..."
                     />
                   </div>
+                </div>
+
+                <div>
+                  <label className="block text-gray-400 text-sm mb-2">Video Demo Link (YouTube or direct video URL)</label>
+                  <input
+                    type="url"
+                    name="videoUrl"
+                    value={formData.videoUrl}
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 bg-dark-700/50 border border-dark-500 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-all"
+                    placeholder="https://youtube.com/watch?v=... or https://.../demo.mp4"
+                  />
                 </div>
 
                 <div>

@@ -36,6 +36,12 @@ const Projects = () => {
 
   const categories = ['all', ...new Set(projects.map(p => p.category?.toLowerCase()).filter(Boolean))]
 
+  // Extract a YouTube video ID from common URL formats; null if not a YouTube link
+  const getYouTubeId = (url) => {
+    const m = url?.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([\w-]{11})/)
+    return m ? m[1] : null
+  }
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
@@ -310,20 +316,37 @@ const Projects = () => {
                 <FaTimes />
               </button>
 
-              {/* Image */}
-              <div className="relative h-64 md:h-80">
-                {selectedProject.image ? (
-                  <img src={selectedProject.image.startsWith('http') ? selectedProject.image : `${import.meta.env.VITE_API_URL}${selectedProject.image}`} alt={selectedProject.title} className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-purple-900/50 to-pink-900/50 flex items-center justify-center">
-                    <FaCode className="text-8xl text-purple-500/30" />
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-dark-800 to-transparent"></div>
-              </div>
+              {/* Video Demo (if provided) */}
+              {selectedProject.videoUrl ? (
+                <div className="relative w-full aspect-video bg-black">
+                  {getYouTubeId(selectedProject.videoUrl) ? (
+                    <iframe
+                      src={`https://www.youtube.com/embed/${getYouTubeId(selectedProject.videoUrl)}`}
+                      title={`${selectedProject.title} demo`}
+                      className="w-full h-full"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <video src={selectedProject.videoUrl} controls className="w-full h-full" />
+                  )}
+                </div>
+              ) : (
+                /* Image */
+                <div className="relative h-64 md:h-80">
+                  {selectedProject.image ? (
+                    <img src={selectedProject.image.startsWith('http') ? selectedProject.image : `${import.meta.env.VITE_API_URL}${selectedProject.image}`} alt={selectedProject.title} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-purple-900/50 to-pink-900/50 flex items-center justify-center">
+                      <FaCode className="text-8xl text-purple-500/30" />
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-dark-800 to-transparent"></div>
+                </div>
+              )}
 
               {/* Content */}
-              <div className="p-8 -mt-20 relative">
+              <div className={`p-8 relative ${selectedProject.videoUrl ? '' : '-mt-20'}`}>
                 <h2 className="text-3xl font-bold text-white mb-4">{selectedProject.title}</h2>
                 <p className="text-gray-400 leading-relaxed mb-6">{selectedProject.description}</p>
 
