@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { FaPlus, FaEdit, FaTrash, FaGithub, FaExternalLinkAlt, FaTimes, FaImage, FaSearch } from 'react-icons/fa'
+import { FaPlus, FaEdit, FaTrash, FaGithub, FaExternalLinkAlt, FaTimes, FaImage, FaSearch, FaUpload } from 'react-icons/fa'
 import { projectsAPI } from '../../services/apiService'
 import { toast } from 'react-toastify'
 
@@ -19,6 +19,8 @@ const Projects = () => {
     videoUrl: '',
     image: '',
   })
+  const [imageFile, setImageFile] = useState(null)
+  const [imagePreview, setImagePreview] = useState(null)
 
   useEffect(() => {
     fetchProjects()
@@ -40,12 +42,33 @@ const Projects = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setImageFile(file)
+      const reader = new FileReader()
+      reader.onloadend = () => setImagePreview(reader.result)
+      reader.readAsDataURL(file)
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
-    const projectData = {
-      ...formData,
-      techStack: formData.techStack.split(',').map((tech) => tech.trim()),
+    const techStack = formData.techStack.split(',').map((tech) => tech.trim()).filter(Boolean)
+
+    // Build multipart form data (supports image file upload)
+    const projectData = new FormData()
+    projectData.append('title', formData.title)
+    projectData.append('description', formData.description)
+    projectData.append('techStack', JSON.stringify(techStack))
+    if (formData.githubLink) projectData.append('githubLink', formData.githubLink)
+    if (formData.liveLink) projectData.append('liveLink', formData.liveLink)
+    if (formData.videoUrl) projectData.append('videoUrl', formData.videoUrl)
+    if (imageFile) {
+      projectData.append('image', imageFile)
+    } else if (formData.image) {
+      projectData.append('image', formData.image)
     }
 
     try {
@@ -74,6 +97,8 @@ const Projects = () => {
       videoUrl: project.videoUrl || '',
       image: project.image || '',
     })
+    setImageFile(null)
+    setImagePreview(project.image ? (project.image.startsWith('http') ? project.image : `${import.meta.env.VITE_API_URL}${project.image}`) : null)
     setShowModal(true)
   }
 
@@ -103,6 +128,8 @@ const Projects = () => {
       videoUrl: '',
       image: '',
     })
+    setImageFile(null)
+    setImagePreview(null)
   }
 
   const filteredProjects = projects.filter(project =>
@@ -374,7 +401,26 @@ const Projects = () => {
                 </div>
 
                 <div>
-                  <label className="block text-gray-400 text-sm mb-2">Image URL</label>
+                  <label className="block text-gray-400 text-sm mb-2">Project Image</label>
+                  <div className="flex items-center gap-4">
+                    <label className="flex items-center gap-2 px-4 py-3 bg-dark-700/50 border border-dark-500 rounded-xl text-gray-400 cursor-pointer hover:border-blue-500 transition-colors w-fit">
+                      <FaUpload />
+                      <span>Upload Image</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="hidden"
+                      />
+                    </label>
+                    {imagePreview && (
+                      <div className="w-20 h-20 rounded-lg overflow-hidden">
+                        <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                  </div>
+
+                  <label className="block text-gray-400 text-sm mt-4 mb-2">…or paste an Image URL</label>
                   <input
                     type="url"
                     name="image"
@@ -383,11 +429,6 @@ const Projects = () => {
                     className="w-full px-4 py-3 bg-dark-700/50 border border-dark-500 rounded-xl text-white focus:outline-none focus:border-blue-500 transition-all"
                     placeholder="https://..."
                   />
-                  {formData.image && (
-                    <div className="mt-3 rounded-xl overflow-hidden h-32">
-                      <img src={formData.image.startsWith('http') ? formData.image : `${import.meta.env.VITE_API_URL}${formData.image}`} alt="Preview" className="w-full h-full object-cover" />
-                    </div>
-                  )}
                 </div>
 
                 <div className="flex gap-4 pt-4">

@@ -37,15 +37,19 @@ export const projectsAPI = {
     return response.data
   },
 
-  // Create project (admin)
+  // Create project (admin) - supports multipart/form-data for image upload
   create: async (projectData) => {
-    const response = await api.post('/api/projects', projectData)
+    const isFormData = projectData instanceof FormData
+    const response = await api.post('/api/projects', projectData,
+      isFormData ? { headers: { 'Content-Type': 'multipart/form-data' } } : undefined)
     return response.data
   },
 
-  // Update project (admin)
+  // Update project (admin) - supports multipart/form-data for image upload
   update: async (id, projectData) => {
-    const response = await api.put(`/api/projects/${id}`, projectData)
+    const isFormData = projectData instanceof FormData
+    const response = await api.put(`/api/projects/${id}`, projectData,
+      isFormData ? { headers: { 'Content-Type': 'multipart/form-data' } } : undefined)
     return response.data
   },
 

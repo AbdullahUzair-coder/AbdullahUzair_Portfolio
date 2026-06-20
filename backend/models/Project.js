@@ -43,6 +43,10 @@ const projectSchema = new mongoose.Schema({
     type: String,
     default: 'default-project.png'
   },
+  imagePublicId: {
+    type: String,
+    default: ''
+  },
   createdAt: {
     type: Date,
     default: Date.now

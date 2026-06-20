@@ -1,4 +1,5 @@
 const Project = require('../models/Project');
+const { uploadToCloudinary, deleteFromCloudinary } = require('../config/cloudinary');
 
 // @desc    Get all projects
 // @route   GET /api/projects
@@ -89,16 +90,29 @@ exports.createProject = async (req, res, next) => {
   try {
     const { title, description, techStack, githubLink, liveLink, videoUrl, image } = req.body;
 
-    // Create project
-    const project = await Project.create({
+    const projectData = {
       title,
       description,
       techStack,
       githubLink,
       liveLink,
-      videoUrl,
-      image
-    });
+      videoUrl
+    };
+
+    // If a file was uploaded, push it to Cloudinary; otherwise use the pasted URL
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file.buffer, {
+        folder: 'portfolio/projects',
+        resourceType: 'image'
+      });
+      projectData.image = result.secure_url;
+      projectData.imagePublicId = result.public_id;
+    } else if (image) {
+      projectData.image = image;
+    }
+
+    // Create project
+    const project = await Project.create(projectData);
 
     res.status(201).json({
       status: 'success',
@@ -152,7 +166,19 @@ exports.updateProject = async (req, res, next) => {
     if (githubLink !== undefined) updateData.githubLink = githubLink;
     if (liveLink !== undefined) updateData.liveLink = liveLink;
     if (videoUrl !== undefined) updateData.videoUrl = videoUrl;
-    if (image !== undefined) updateData.image = image;
+
+    // New uploaded file replaces the image; otherwise honor a pasted URL
+    if (req.file) {
+      const result = await uploadToCloudinary(req.file.buffer, {
+        folder: 'portfolio/projects',
+        resourceType: 'image'
+      });
+      updateData.image = result.secure_url;
+      updateData.imagePublicId = result.public_id;
+      await deleteFromCloudinary(project.imagePublicId, 'image');
+    } else if (image !== undefined) {
+      updateData.image = image;
+    }
 
     // Update project
     project = await Project.findByIdAndUpdate(
@@ -204,6 +230,9 @@ exports.deleteProject = async (req, res, next) => {
         message: 'Project not found'
       });
     }
+
+    // Remove the associated Cloudinary image if one was uploaded
+    await deleteFromCloudinary(project.imagePublicId, 'image');
 
     await Project.findByIdAndDelete(req.params.id);
 

@@ -10,6 +10,21 @@ const {
 } = require('../controllers/projectController');
 const { protectAdmin } = require('../middleware/adminAuth');
 const { validate } = require('../middleware/validator');
+const upload = require('../middleware/upload');
+
+// When the form is sent as multipart/form-data (file upload), array fields like
+// techStack arrive as a JSON string. Parse it back into an array before validation.
+const parseProjectBody = (req, res, next) => {
+  if (typeof req.body.techStack === 'string') {
+    try {
+      const parsed = JSON.parse(req.body.techStack);
+      if (Array.isArray(parsed)) req.body.techStack = parsed;
+    } catch (e) {
+      // leave as-is; validation will surface the error
+    }
+  }
+  next();
+};
 
 // Validation rules for creating project
 const createProjectValidation = [
@@ -109,8 +124,8 @@ router.get('/', getProjects);
 router.get('/:id', getProject);
 
 // Protected routes (Admin only)
-router.post('/', protectAdmin, createProjectValidation, validate, createProject);
-router.put('/:id', protectAdmin, updateProjectValidation, validate, updateProject);
+router.post('/', protectAdmin, upload.single('image'), parseProjectBody, createProjectValidation, validate, createProject);
+router.put('/:id', protectAdmin, upload.single('image'), parseProjectBody, updateProjectValidation, validate, updateProject);
 router.delete('/:id', protectAdmin, deleteProject);
 
 module.exports = router;
