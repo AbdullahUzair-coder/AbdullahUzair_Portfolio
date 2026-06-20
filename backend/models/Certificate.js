@@ -31,7 +31,15 @@ const certificateSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
+  imagePublicId: {
+    type: String,
+    trim: true
+  },
   pdfUrl: {
+    type: String,
+    trim: true
+  },
+  pdfPublicId: {
     type: String,
     trim: true
   },

@@ -112,7 +112,7 @@ const Home = () => {
               <div className="flex flex-wrap gap-4 pt-4">
                 {settings?.cvUrl && (
                   <a
-                    href={`${import.meta.env.VITE_API_URL}${settings.cvUrl}`}
+                    href={settings.cvUrl.startsWith('http') ? settings.cvUrl : `${import.meta.env.VITE_API_URL}${settings.cvUrl}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="group btn btn-primary flex items-center gap-2"

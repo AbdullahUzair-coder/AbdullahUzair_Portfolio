@@ -1,6 +1,27 @@
 const Certificate = require('../models/Certificate');
-const path = require('path');
-const fs = require('fs');
+const { uploadToCloudinary, deleteFromCloudinary } = require('../config/cloudinary');
+
+// Upload any provided image/pdf files to Cloudinary and merge their URLs/public_ids
+// into the given data object.
+const applyUploads = async (files, data) => {
+  if (!files) return;
+  if (files.image) {
+    const result = await uploadToCloudinary(files.image[0].buffer, {
+      folder: 'portfolio/certificates',
+      resourceType: 'image'
+    });
+    data.image = result.secure_url;
+    data.imagePublicId = result.public_id;
+  }
+  if (files.pdf) {
+    const result = await uploadToCloudinary(files.pdf[0].buffer, {
+      folder: 'portfolio/certificates',
+      resourceType: 'raw'
+    });
+    data.pdfUrl = result.secure_url;
+    data.pdfPublicId = result.public_id;
+  }
+};
 
 // @desc    Get all certificates
 // @route   GET /api/certificates
@@ -64,14 +85,7 @@ exports.createCertificate = async (req, res, next) => {
     const certificateData = { ...req.body };
 
     // Handle file uploads
-    if (req.files) {
-      if (req.files.image) {
-        certificateData.image = '/uploads/' + req.files.image[0].filename;
-      }
-      if (req.files.pdf) {
-        certificateData.pdfUrl = '/uploads/' + req.files.pdf[0].filename;
-      }
-    }
+    await applyUploads(req.files, certificateData);
 
     const certificate = await Certificate.create(certificateData);
 
@@ -91,14 +105,23 @@ exports.updateCertificate = async (req, res, next) => {
   try {
     const certificateData = { ...req.body };
 
+    const existing = await Certificate.findById(req.params.id);
+    if (!existing) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Certificate not found'
+      });
+    }
+
     // Handle file uploads
-    if (req.files) {
-      if (req.files.image) {
-        certificateData.image = '/uploads/' + req.files.image[0].filename;
-      }
-      if (req.files.pdf) {
-        certificateData.pdfUrl = '/uploads/' + req.files.pdf[0].filename;
-      }
+    await applyUploads(req.files, certificateData);
+
+    // Delete old Cloudinary assets that are being replaced
+    if (certificateData.imagePublicId) {
+      await deleteFromCloudinary(existing.imagePublicId, 'image');
+    }
+    if (certificateData.pdfPublicId) {
+      await deleteFromCloudinary(existing.pdfPublicId, 'raw');
     }
 
     const certificate = await Certificate.findByIdAndUpdate(
@@ -140,19 +163,9 @@ exports.deleteCertificate = async (req, res, next) => {
       });
     }
 
-    // Delete associated files if they exist
-    if (certificate.image) {
-      const imagePath = path.join(__dirname, '../public', certificate.image);
-      if (fs.existsSync(imagePath)) {
-        fs.unlinkSync(imagePath);
-      }
-    }
-    if (certificate.pdfUrl) {
-      const pdfPath = path.join(__dirname, '../public', certificate.pdfUrl);
-      if (fs.existsSync(pdfPath)) {
-        fs.unlinkSync(pdfPath);
-      }
-    }
+    // Delete associated Cloudinary assets if they exist
+    await deleteFromCloudinary(certificate.imagePublicId, 'image');
+    await deleteFromCloudinary(certificate.pdfPublicId, 'raw');
 
     await Certificate.findByIdAndDelete(req.params.id);
 

@@ -1,6 +1,5 @@
 const Settings = require('../models/Settings');
-const fs = require('fs');
-const path = require('path');
+const { uploadToCloudinary, deleteFromCloudinary } = require('../config/cloudinary');
 
 // @desc    Get portfolio settings
 // @route   GET /api/settings
@@ -77,22 +76,24 @@ exports.uploadProfileImage = async (req, res, next) => {
     }
 
     let settings = await Settings.getSettings();
-    
-    // Delete old profile image if exists
-    if (settings.profileImage) {
-      const oldImagePath = path.join(__dirname, '..', 'public', settings.profileImage);
-      if (fs.existsSync(oldImagePath)) {
-        fs.unlinkSync(oldImagePath);
-      }
-    }
 
-    // Update with new image path
-    settings.profileImage = `/uploads/${req.file.filename}`;
+    // Upload new image to Cloudinary
+    const result = await uploadToCloudinary(req.file.buffer, {
+      folder: 'portfolio/profile',
+      resourceType: 'image'
+    });
+
+    // Delete old profile image from Cloudinary if exists
+    await deleteFromCloudinary(settings.profileImagePublicId, 'image');
+
+    // Update with new image URL
+    settings.profileImage = result.secure_url;
+    settings.profileImagePublicId = result.public_id;
     await settings.save();
 
     res.status(200).json({
       status: 'success',
-      data: { 
+      data: {
         settings,
         imageUrl: settings.profileImage
       }
@@ -115,22 +116,24 @@ exports.uploadCV = async (req, res, next) => {
     }
 
     let settings = await Settings.getSettings();
-    
-    // Delete old CV if exists
-    if (settings.cvUrl) {
-      const oldCvPath = path.join(__dirname, '..', 'public', settings.cvUrl);
-      if (fs.existsSync(oldCvPath)) {
-        fs.unlinkSync(oldCvPath);
-      }
-    }
 
-    // Update with new CV path
-    settings.cvUrl = `/uploads/${req.file.filename}`;
+    // Upload new CV to Cloudinary (raw resource type for PDF/DOC files)
+    const result = await uploadToCloudinary(req.file.buffer, {
+      folder: 'portfolio/cv',
+      resourceType: 'raw'
+    });
+
+    // Delete old CV from Cloudinary if exists
+    await deleteFromCloudinary(settings.cvPublicId, 'raw');
+
+    // Update with new CV URL
+    settings.cvUrl = result.secure_url;
+    settings.cvPublicId = result.public_id;
     await settings.save();
 
     res.status(200).json({
       status: 'success',
-      data: { 
+      data: {
         settings,
         cvUrl: settings.cvUrl
       }

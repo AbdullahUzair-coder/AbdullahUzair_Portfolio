@@ -52,9 +52,17 @@ const settingsSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
-  
+  profileImagePublicId: {
+    type: String,
+    default: ''
+  },
+
   // CV/Resume
   cvUrl: {
+    type: String,
+    default: ''
+  },
+  cvPublicId: {
     type: String,
     default: ''
   },
